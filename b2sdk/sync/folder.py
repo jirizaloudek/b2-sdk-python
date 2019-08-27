@@ -153,6 +153,16 @@ class LocalFolder(AbstractFolder):
                 'Directory %s is empty.  Use --allowEmptySource to sync anyway.' % (self.root,)
             )
 
+    def mylistdir(self, dirpath):
+        logger.debug("!!!!patched version")
+        #if isinstance(dirpath,unicode):
+        #    dirpath = dirpath.encode('utf8')
+        for p in os.listdir(dirpath):
+            logger.debug("file: %s", p)
+            logger.debug("encoded: %s", p.encode('utf8', 'surrogateescape').decode())
+
+        return [p.encode('utf8', 'surrogateescape').decode() for p in os.listdir(dirpath)]
+
     def _walk_relative_paths(self, local_dir, b2_dir, reporter, policies_manager):
         """
         Yields a File object for each of the files anywhere under this folder, in the

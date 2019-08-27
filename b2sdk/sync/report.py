@@ -150,7 +150,7 @@ class SyncReport(object):
         if len(line) < len(self.current_line):
             line += ' ' * (len(self.current_line) - len(line))
         try:
-            self.stdout.write(line)
+            self.stdout.write(line.encode('utf8', 'surrogateescape').decode())
         except UnicodeEncodeError as encode_error:
             if not self.encoding_warning_was_already_printed:
                 self.encoding_warning_was_already_printed = True
@@ -158,7 +158,7 @@ class SyncReport(object):
                     '!WARNING! this terminal cannot properly handle progress reporting.  encoding is %s.\n'
                     % (self.stdout.encoding,)
                 )
-            self.stdout.write(line.encode('ascii', 'backslashreplace').decode())
+            self.stdout.write(line.encode('utf-8', 'surrogateescape').decode())
             logger.warning(
                 'could not output the following line with encoding %s on stdout due to %s: %s' %
                 (self.stdout.encoding, encode_error, line)

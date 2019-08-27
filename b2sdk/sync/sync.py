@@ -57,7 +57,11 @@ def zip_folders(folder_a, folder_b, reporter, policies_manager=DEFAULT_SCAN_MANA
     """
 
     iter_a = folder_a.all_files(reporter, policies_manager)
+    #logger.debug('iter_a[0]: %s', next_or_none(iter_a))
+    #logger.debug('iter_a[1]: %s', next_or_none(iter_a))
     iter_b = folder_b.all_files(reporter)
+    #logger.debug('iter_b[0]: %s', next_or_none(iter_b))
+    #logger.debug('iter_b[1]: %s', next_or_none(iter_b))
 
     current_a = next_or_none(iter_a)
     current_b = next_or_none(iter_b)
@@ -69,14 +73,14 @@ def zip_folders(folder_a, folder_b, reporter, policies_manager=DEFAULT_SCAN_MANA
         elif current_b is None:
             yield (current_a, None)
             current_a = next_or_none(iter_a)
-        elif current_a.name < current_b.name:
+        elif current_a.name.encode('utf8', 'surrogateescape').decode() < current_b.name.encode('utf8', 'surrogateescape').decode():
             yield (current_a, None)
             current_a = next_or_none(iter_a)
-        elif current_b.name < current_a.name:
+        elif current_b.name.encode('utf8', 'surrogateescape').decode() < current_a.name.encode('utf8', 'surrogateescape').decode():
             yield (None, current_b)
             current_b = next_or_none(iter_b)
         else:
-            assert current_a.name == current_b.name
+            assert current_a.name.encode('utf8', 'surrogateescape').decode() == current_b.name.encode('utf8', 'surrogateescape').decode()
             yield (current_a, current_b)
             current_a = next_or_none(iter_a)
             current_b = next_or_none(iter_b)
